@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,14 +6,34 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <title>Enviar archivo XML</title>
 </head>
 <body>
-    <h1>Enviar archivo XML</h1>
-    <form action = "http://127.0.0.1:5000/procesar-xml" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="archivo" accept=".xml">
-        <button type="submit">Enviar</button>
-    </form>
+    <section>
+        <h1>Enviar archivos XML</h1>
+        <div class="container-botones-cargar">
+            <div class="container-boton">
+                <form action = "http://127.0.0.1:5000/procesar-xml" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="archivo" accept=".xml" id="seleccionar">
+                    <button type="submit">Cargar Configuracion</button>
+                </form>
+            </div>
+            <div class="container-boton">
+                <form action = "http://127.0.0.1:5000/procesar-xml" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="archivo" accept=".xml">
+                    <button type="submit">Cargar Transacciones</button>
+                </form>
+            </div>
+        </div>
+        <div class="container-botones-func">
+            <button>Resetear Datos</button>
+            <button>Peticiones</button>
+            <button>Ayuda</button>
+        </div>
+        
+    </section>
 </body>
 </html>

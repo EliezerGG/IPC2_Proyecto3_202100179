@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <title>Peticiones</title>
+</head>
+<body>
+    <div class="container-peticiones">
+        <h2>Consultar Estado de Cuenta</h2>
+        <label for="nit">Nit:</label><input type="text" id="nit" placeholder="Ingrese NIT">
+        <button id="ver-todos">Ver Todos los Clientes</button>
+        <div class="container-clientes inactive" id="clientes">
+            <h2>Aqui esta la lista</h2>
+        </div>
+        <label for="mes">Mes:</label><input type="text" id="mes" placeholder="Ingrese Mes (Ej: enero/2024)">
+{#        <button id="consultar-ingreso">Consultar Ingreso</button>#}
+    </div>
+    <script>
+        const toggleButton = document.getElementById('ver-todos');
+        const divClientes = document.getElementById('clientes');
+
+        toggleButton.addEventListener('click', ()=>{
+            divClientes.classList.toggle('inactive');
+        })
+    </script>
+</body>
+</html>

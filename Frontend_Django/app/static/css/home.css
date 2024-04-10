@@ -1,0 +1,135 @@
+/* General button styles */
+body{
+    font-family: Verdana, sans-serif;
+    background-color: #3652AD;
+}
+h1{
+    text-align: center;
+    color: white;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.container-botones-cargar input{
+  background-color: #17223B;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 323px;
+}
+.container-botones-cargar button{
+  background-color: #FE7A36;
+  width: 382px;
+}
+.container-botones-func button {
+  background-color: #280274;
+  display: inline-block;
+  width: 382px;
+
+}
+
+.container-peticiones button{
+  background-color: #280274;
+}
+
+.container-peticiones h2 {
+  color: white;
+  text-align: center;
+}
+
+button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Button hover effect */
+.container-botones-func button:hover {
+  background-color: #214b7d;
+}
+.container-botones-cargar button:hover {
+  background-color: #f88f5b;
+}
+
+
+/* container-botones-cargar styles */
+.container-botones-cargar {
+  display: flex; /* Arrange buttons horizontally */
+  flex-direction: column;
+}
+
+.container-botones-cargar .container-boton {
+  flex: 1; /* Make buttons share available space equally */
+  padding: 10px;
+  text-align: center;
+}
+
+/* container-botones-func styles */
+.container-botones-func {
+  display: flex;
+  flex-direction: column; /* Arrange buttons vertically */
+  margin-top: 20px; /* Add space between sections */
+  align-items: center;
+}
+
+/* Title styles (within buttons) */
+.container-boton{
+  margin: 10px 10px;
+  border-radius: 12px;
+  width: auto;
+}
+
+/*Peticiones*/
+.container-peticiones {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-peticiones label{
+  display: inline-block;
+  font-family: Verdana, sans-serif;
+  font-size: 16px;
+  color: white;
+  margin: 5px 5px
+
+}
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.inactive {
+  display: none;
+  background-color: #f0f0f0;
+}
+@media (max-width: 768px) {
+  /* Change container-botones-cargar to flex-direction: column */
+  .container-botones-cargar {
+    flex-direction: column;
+  }
+}
+
