@@ -1,25 +1,11 @@
 from flask import Flask, jsonify, request, render_template,url_for
 from flask_cors import CORS
 import xml.etree.ElementTree as ET
+from db import connect_to_database
 
-import mysql.connector
 app = Flask(__name__)
 CORS(app)
 
-def connect_to_database():
-        config = {
-            'user': 'root',
-            'password': 'ejemplo',
-            'host': 'localhost',
-            'database': 'banca_virtual',
-            'raise_on_warnings': True
-        }
-
-        connection = mysql.connector.connect(**config)
-
-        return connection
-    
-    
 @app.route("/conexion", methods=['GET'])
 def test_database_connection():
     try:
