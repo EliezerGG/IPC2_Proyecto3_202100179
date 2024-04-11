@@ -1,0 +1,39 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    
+    <title>Document</title>
+</head>
+<body>
+<div class="container-info">
+    <button id="btn-info">Informacion Estudiante</button>
+    <div class="info-estudiante inactive" id="info">
+        <p>Isai Eliezer Magdiel Molina Guevara <br> carnet: 202100179 <br> Proyecto 3</p>
+    </div>
+    <button id="btn-docu">Documentacion</button>
+    <div class="documentacion inactive" id="docu">
+        <a href="https://github.com/EliezerGG/IPC2_Proyecto3_202100179">Link Repositorio</a>
+    </div>
+</div>
+<script>
+    const buttonInfo = document.getElementById('btn-info')
+    const buttonDocu = document.getElementById('btn-docu')
+    const divInfo = document.getElementById('info')
+    const divDocu = document.getElementById('docu')
+    
+    buttonInfo.addEventListener('click', ()=>{
+        divInfo.classList.toggle('inactive')
+    })
+    
+    buttonDocu.addEventListener('click', ()=>{
+        divDocu.classList.toggle('inactive')
+    })
+</script>
+</body>
+</html>

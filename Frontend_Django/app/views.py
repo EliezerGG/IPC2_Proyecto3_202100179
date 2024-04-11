@@ -10,3 +10,7 @@ def home(request):
 
 def peticiones(request):
     return render(request, 'peticiones.html')
+
+
+def ayuda(request):
+    return render(request, 'ayuda.html')

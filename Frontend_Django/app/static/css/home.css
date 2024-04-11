@@ -2,6 +2,10 @@
 body{
     font-family: Verdana, sans-serif;
     background-color: #3652AD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 h1{
     text-align: center;
@@ -45,6 +49,10 @@ form{
   background-color: #280274;
 }
 
+.container-info button{
+  background-color: #280274;
+  width: 400px;
+}
 .container-peticiones h2 {
   color: white;
   text-align: center;
@@ -68,6 +76,9 @@ button {
 }
 .container-botones-cargar button:hover {
   background-color: #f88f5b;
+}
+.container-peticiones button:hover {
+  background-color: #4205b8;
 }
 
 
@@ -126,6 +137,18 @@ input[type="text"] {
   display: none;
   background-color: #f0f0f0;
 }
+
+/*Ayuda*/
+
+.container-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+
 @media (max-width: 768px) {
   /* Change container-botones-cargar to flex-direction: column */
   .container-botones-cargar {

@@ -29,11 +29,11 @@ def test_database_connection():
         result = cursor.fetchone()
         if result[0] == 1:
             print('Hola')
-            return ("La conexión a la base de datos fue exitosa.", 200)
+            return "La conexión a la base de datos fue exitosa.", 200
         else:
-            return ("La conexión a la base de datos no fue exitosa.", 400)
+            return "La conexión a la base de datos no fue exitosa.", 400
     except Exception as e:
-        return ("Ocurrió un error al intentar conectarse a la base de datos:", e)
+        return "Ocurrió un error al intentar conectarse a la base de datos:", e
     finally:
         if (connection):
             cursor.close()
