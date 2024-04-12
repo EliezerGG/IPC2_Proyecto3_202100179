@@ -1,0 +1,30 @@
+<!-- estado_cuenta.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado de Cuenta</title>
+</head>
+<body>
+    <h2>Estado de Cuenta del Cliente</h2>
+    <div>
+        <p>Cliente: {{ cliente_data.nit }} - {{ cliente_data.nombre }}</p>
+        <p>Saldo actual: Q. {{ cliente_data.saldo }}</p>
+    </div>
+
+    <h3>Facturas:</h3>
+    <ul>
+        {% for factura in cliente_data.facturas %}
+            <li>{{ factura.fecha }} | {{ factura.cargo }} | {{ factura.abono }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Pagos:</h3>
+    <ul>
+        {% for pago in cliente_data.pagos %}
+            <li>{{ pago.fecha }} | {{ pago.cargo }} | {{ pago.abono }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
