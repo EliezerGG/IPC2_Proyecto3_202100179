@@ -21,7 +21,7 @@
                 </form>
             </div>
             <div class="container-boton">
-                <form action = "http://127.0.0.1:5000/procesar-xml-trancs" method="post" enctype="multipart/form-data">
+                <form action = "http://127.0.0.1:5000/procesar-xml-transac" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="file" name="archivo" accept=".xml">
                     <button type="submit">Cargar Transacciones</button>
