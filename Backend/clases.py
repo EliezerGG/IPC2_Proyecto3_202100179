@@ -38,4 +38,16 @@ class Control:
         self.pagos_insertados = 0
         self.pagos_duplicados = 0
         self.pagos_error = 0 
+    
+    def resetear_datos(self):
+        self.clientes_actualizados = 0
+        self.clientes_insertados = 0
+        self.bancos_insertados = 0
+        self.bancos_actualizados = 0
+        self.facturas_insertadas = 0
+        self.facturas_duplicadas = 0
+        self.facturas_error = 0
+        self.pagos_insertados = 0
+        self.pagos_duplicados = 0
+        self.pagos_error = 0
         

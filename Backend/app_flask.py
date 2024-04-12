@@ -36,6 +36,7 @@ def test_database_connection():
 
 @app.route('/procesar-xml', methods=['POST'])
 def procesar_xml():
+    control.resetear_datos()
     if request.method == 'POST':
         xml_file = request.files.get('archivo')
         if xml_file:
@@ -85,6 +86,7 @@ def descargar_xml_config():
 
 @app.route('/procesar-xml-transac', methods=['POST'])
 def procesar_xml_transac():
+    control.resetear_datos()
     if request.method == 'POST':
         xml_file = request.files.get('archivo')
         if xml_file:
@@ -97,24 +99,40 @@ def procesar_xml_transac():
                 fecha = factura.find("fecha").text.strip()
                 fecha = datetime.strptime(fecha, "%d/%m/%Y")
                 fecha = fecha.strftime("%Y-%m-%d")
-                valor = float(factura.find("valor").text)
+                valor_text = factura.find("valor").text.strip()
+                
+                try:
+                    valor = float(valor_text)
+                    if valor < 0:
+                        raise ValueError(f"El valor de la factura debe ser mayor que cero. Valor ingresado: {valor}")
+                except ValueError:
+                    print(f"El valor '{valor_text}' no es un número flotante válido.")
+                    control.facturas_error += 1
+                    continue
                 
                 nueva_factura = Factura(numero_factura, nit_cliente, fecha, valor)
                 control.facturas.append(nueva_factura)
-                # print(f'Factura: {numero_factura} {nit_cliente} {fecha} {valor}')
                 
                 insertar_factura(numero_factura, nit_cliente, fecha, valor)
-            
+
             for pago in root.find("pagos").findall("pago"):
                 codigo_banco = pago.find("codigoBanco").text
                 fecha = pago.find("fecha").text.strip()
                 fecha = datetime.strptime(fecha, "%d/%m/%Y")
                 nit_cliente = pago.find("NITcliente").text.strip()
-                valor = float(pago.find("valor").text)
+                valor_text = pago.find("valor").text.strip()  # Corregir aquí
+                
+                try:
+                    valor = float(valor_text)
+                    if valor < 0:
+                        raise ValueError(f"El valor del pago debe ser mayor que cero. Valor ingresado: {valor}")
+                except ValueError:
+                    print(f"El valor '{valor_text}' no es un número flotante válido.")
+                    control.pagos_error += 1
+                    continue
                 
                 nuevo_pago = Pago(codigo_banco, fecha, nit_cliente, valor)
                 control.pagos.append(nuevo_pago)
-                # print(f'Pago: {codigo_banco} {fecha} {nit_cliente} {valor}')
                 
                 insertar_pago(codigo_banco, nit_cliente, fecha, valor)  
             
@@ -124,8 +142,29 @@ def procesar_xml_transac():
             print(f"Pagos Insertados: {control.pagos_insertados}")
             print(f"Pagos con Error: {control.pagos_error}")
             
-            return "Archivo XML procesado correctamente", 200
+            return redirect(url_for('descargar_xml_transac'))
     return 'Error al procesar el archivo XML', 400
+
+@app.route('/descargar-xml-transac')
+def descargar_xml_transac():
+    facturas_insertadas = control.facturas_insertadas
+    facturas_duplicadas = control.facturas_duplicadas
+    facturas_error = control.facturas_error
+    
+    pagos_insertados = control.pagos_insertados
+    pagos_duplicados = control.pagos_duplicados
+    pagos_error = control.pagos_error
+    
+    xml_content = utils.respuesta_xml_transac(facturas_insertadas, facturas_duplicadas, facturas_error, pagos_insertados, pagos_duplicados, pagos_error)
+    
+    # Crear una respuesta con el contenido del archivo XML
+    response = make_response(xml_content)
+    
+    # Establecer las cabeceras para indicar que es un archivo XML para descargar
+    response.headers['Content-Type'] = 'text/xml'
+    response.headers['Content-Disposition'] = 'attachment; filename=respuesta_transac.xml'
+
+    return response
 
 
 if __name__ == '__main__':
