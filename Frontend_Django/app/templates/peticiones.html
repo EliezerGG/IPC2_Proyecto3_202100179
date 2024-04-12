@@ -12,8 +12,11 @@
 <body>
     <div class="container-peticiones">
         <h2>Consultar Estado de Cuenta</h2>
-        <label for="nit">Nit:</label><input type="text" id="nit" placeholder="Ingrese NIT">
-        <button id="ver-todos">Ver Todos los Clientes</button>
+        <form action="http://127.0.0.1:5000/obtener-cliente" method="GET">
+            <label for="nit">Nit:</label><input type="text" id="nit" placeholder="Ingrese NIT" name="nit-cliente">
+            <button id="ver-cliente" type="submit">Ver Consulta Cliente</button>
+        </form>
+            <button id="ver-todos">Ver Todos los Clientes</button>
         <div class="container-clientes inactive" id="clientes">
             <h2>Aqui esta la lista</h2>
         </div>

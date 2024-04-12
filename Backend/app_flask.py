@@ -7,6 +7,7 @@ from db import *
 from clases import *
 import utils
 from datetime import datetime
+import json
 
 
 app = Flask(__name__)
@@ -166,6 +167,21 @@ def descargar_xml_transac():
 
     return response
 
+@app.route('/obtener-cliente', methods=['GET'])
+def obtener_cliente():
+    if request.method == 'GET':
+        nit = request.args.get('nit-cliente')
+        print(nit)
+        cliente, facturas, pagos = obtener_info_cliente(nit)
+        print(type(cliente)) #dict
+        print(type(facturas)) #lista
+        print(type(pagos)) #lista
+        if cliente:
+            print(json.dumps(cliente, indent=4))
+            print(facturas)
+            print(pagos)
+            return "se obtuvo el cliente", 200
+    return 'Error al obtener el cliente', 400
 
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)

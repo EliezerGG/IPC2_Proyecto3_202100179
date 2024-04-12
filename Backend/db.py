@@ -139,3 +139,57 @@ def insertar_pago(codigo_banco, nit_cliente, fecha, valor):
         # Cerrar cursor y conexión
         cursor.close()
         connection.close()
+
+def obtener_info_cliente(nit_cliente):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM Cliente WHERE NIT = %s", (nit_cliente,))
+        cliente = cursor.fetchone()
+        
+        if cliente:
+            cursor.execute("SELECT * FROM Factura WHERE NITCliente = %s", (nit_cliente,))
+            facturas = cursor.fetchall()
+            
+            cursor.execute("SELECT * FROM Pago WHERE NITCliente = %s", (nit_cliente,))
+            pagos = cursor.fetchall()
+            
+            return cliente, facturas, pagos
+        else:
+            print(f"No se encontró un cliente con NIT {nit_cliente}")
+            return None, None, None
+    except mysql.connector.Error as e:
+        print("Error al obtener información del cliente:", e)
+    
+
+def obtener_info_todos_clientes(connection):
+    try:
+        cursor = connection.cursor(dictionary=True)
+        
+        # Consultar todos los clientes
+        cursor.execute("SELECT * FROM Cliente")
+        clientes = cursor.fetchall()
+        
+        info_clientes = []
+        for cliente in clientes:
+            nit_cliente = cliente['NIT']
+            
+            # Consultar facturas del cliente
+            cursor.execute("SELECT * FROM Factura WHERE NITCliente = %s", (nit_cliente,))
+            facturas = cursor.fetchall()
+            
+            # Consultar pagos del cliente
+            cursor.execute("SELECT * FROM Pago WHERE NITCliente = %s", (nit_cliente,))
+            pagos = cursor.fetchall()
+            
+            info_clientes.append({
+                'cliente': cliente,
+                'facturas': facturas,
+                'pagos': pagos
+            })
+        
+        return info_clientes
+    except mysql.connector.Error as e:
+        print("Error al conectar a la base de datos:", e)
+        return None

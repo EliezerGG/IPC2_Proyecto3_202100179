@@ -14,3 +14,6 @@ def peticiones(request):
 
 def ayuda(request):
     return render(request, 'ayuda.html')
+
+# --- pruebas
+
