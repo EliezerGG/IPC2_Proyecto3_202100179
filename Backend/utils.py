@@ -1,4 +1,4 @@
-from babel.dates import format_date
+import matplotlib.pyplot as plt
 from collections import defaultdict
 from datetime import datetime
 import xml.etree.ElementTree as ET
@@ -212,3 +212,62 @@ def pagos_ordenados_por_mes(pagos):
     
     return resultados
             
+# Ejemplo de uso
+data = [
+    {"FechaMesAnio": "Enero/2024", "NombreBanco": "Banrural", "suma_valores_mes": 120.0},
+    {"FechaMesAnio": "Febrero/2024", "NombreBanco": "Banrural", "suma_valores_mes": 202.2},
+    {"FechaMesAnio": "Marzo/2024", "NombreBanco": "Banrural", "suma_valores_mes": 350.0},
+    {"FechaMesAnio": "Febrero/2024", "NombreBanco": "Banco Industrial", "suma_valores_mes": 220.0},
+    {"FechaMesAnio": "Enero/2024", "NombreBanco": "Banco Industrial", "suma_valores_mes": 450.1},
+    {"FechaMesAnio": "Marzo/2024", "NombreBanco": "Banco Industrial", "suma_valores_mes": 320.0},
+    {"FechaMesAnio": "Junio/2024", "NombreBanco": "Banco Industrial", "suma_valores_mes": 456.0},
+    {"FechaMesAnio": "Abril/2024", "NombreBanco": "Banco de los Trabajadores", "suma_valores_mes": 420.0},
+    {"FechaMesAnio": "Julio/2024", "NombreBanco": "Banco de los Trabajadores", "suma_valores_mes": 800.0},
+    {"FechaMesAnio": "Mayo/2024", "NombreBanco": "Banco de Antigua", "suma_valores_mes": 520.0},
+    {"FechaMesAnio": "Septiembre/2024", "NombreBanco": "Banco de Antigua", "suma_valores_mes": 900.0},
+    {"FechaMesAnio": "Junio/2024", "NombreBanco": "Banco de Credito", "suma_valores_mes": 620.0},
+    {"FechaMesAnio": "Julio/2024", "NombreBanco": "Banco de America Central", "suma_valores_mes": 1610.0}
+]
+
+
+def obtener_mes_anterior(mes):
+    meses_ordenados = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+    indice_mes = meses_ordenados.index(mes)
+    if indice_mes == 0:
+        return 'Diciembre'
+    else:
+        return meses_ordenados[indice_mes - 1]
+
+# def grafica_ingresos_por_mes(data, mes_anio):
+#     sumas_por_mes_y_banco = defaultdict(lambda: defaultdict(float))
+#     mes, anio = mes_anio.split('/')
+    
+#     # Obtener los meses de interés
+#     meses_interes = [obtener_mes_anterior(mes), mes]
+#     if obtener_mes_anterior(mes) != 'Enero':
+#         meses_interes.append(obtener_mes_anterior(obtener_mes_anterior(mes)))
+    
+#     for entry in data:
+#         nombre_banco = entry['NombreBanco']
+#         for mes_interes in meses_interes:
+#             if mes_interes in entry['FechaMesAnio']:
+#                 sumas_por_mes_y_banco[nombre_banco][mes_interes] += entry['suma_valores_mes']
+
+#     # Generar gráfica para cada banco
+#     for nombre_banco, sumas_por_mes in sumas_por_mes_y_banco.items():
+#         meses_ordenados = [obtener_mes_anterior(mes), mes, obtener_mes_anterior(obtener_mes_anterior(mes))]
+#         ingresos = [sumas_por_mes[mes] for mes in meses_ordenados]
+
+#         plt.figure(figsize=(8, 5))
+#         plt.bar(meses_ordenados, ingresos, color='skyblue')
+#         plt.xlabel('Mes')
+#         plt.ylabel('Ingresos')
+#         plt.title(f'Ingresos de {nombre_banco} por Mes')
+#         plt.show()
+
+
+# grafica_ingresos_por_mes(data, 'Junio/2024')
+
