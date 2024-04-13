@@ -16,6 +16,40 @@ def connect_to_database():
 
     return connection
   
+def limpiar_base_datos():
+    try:
+        # Establecer conexión a la base de datos
+        connection = connect_to_database()  # Debes definir esta función según tu implementación
+        
+        # Crear el cursor
+        cursor = connection.cursor()
+        
+        cursor.execute("DELETE FROM Cliente")
+        cursor.execute("DELETE FROM Banco")
+        # Eliminar todos los datos de la tabla Factura
+        cursor.execute("DELETE FROM Factura")
+        
+        # Eliminar todos los datos de la tabla Pago
+        cursor.execute("DELETE FROM Pago")
+        
+        # Reiniciar el contador de autoincremento de la tabla Factura (si es necesario)
+        cursor.execute("ALTER TABLE Factura AUTO_INCREMENT = 1")
+        
+        # Reiniciar el contador de autoincremento de la tabla Pago (si es necesario)
+        cursor.execute("ALTER TABLE Pago AUTO_INCREMENT = 1")
+        
+        # Confirmar los cambios en la base de datos
+        connection.commit()
+        
+        print("Base de datos limpiada correctamente.")
+    except mysql.connector.Error as error:
+        print("Error al limpiar la base de datos:", error)
+    finally:
+        # Cerrar el cursor y la conexión
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
   
   
 def insert_cliente(NIT, nombre):
@@ -192,6 +226,26 @@ def obtener_info_todos_clientes():
             })
         
         return info_clientes
+    except mysql.connector.Error as e:
+        print("Error al conectar a la base de datos:", e)
+        return None
+
+def obtener_todos_pagos():
+    connection = connect_to_database()
+    cursor = connection.cursor(dictionary=True)
+    
+    try:
+        # Consultar todos los pagos con el nombre del banco
+        query = """
+            SELECT Pago.CodigoBanco, Banco.Nombre AS NombreBanco, DATE_FORMAT(Pago.Fecha, '%d/%m/%Y') AS FechaFormateada, Pago.Valor
+            FROM Pago
+            INNER JOIN Banco ON Pago.CodigoBanco = Banco.Codigo
+
+        """
+        cursor.execute(query)
+        pagos = cursor.fetchall()
+        
+        return pagos
     except mysql.connector.Error as e:
         print("Error al conectar a la base de datos:", e)
         return None

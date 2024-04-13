@@ -50,4 +50,18 @@ class Control:
         self.pagos_insertados = 0
         self.pagos_duplicados = 0
         self.pagos_error = 0
-        
+
+meses_espanol = {
+    'January': 'Enero',
+    'February': 'Febrero',
+    'March': 'Marzo',
+    'April': 'Abril',
+    'May': 'Mayo',
+    'June': 'Junio',
+    'July': 'Julio',
+    'August': 'Agosto',
+    'September': 'Septiembre',
+    'October': 'Octubre',
+    'November': 'Noviembre',
+    'December': 'Diciembre'
+}

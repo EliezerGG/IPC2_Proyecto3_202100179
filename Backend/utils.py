@@ -1,8 +1,12 @@
+from babel.dates import format_date
+from collections import defaultdict
+from datetime import datetime
 import xml.etree.ElementTree as ET
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
+from clases import meses_espanol
 
 def respuesta_xml_config(clientes_insertados, clientes_actualizados, bancos_insertados, bancos_actualizados):
     respuesta = ET.Element("respuesta")
@@ -174,3 +178,37 @@ def generar_pdf_clientes(clientes_data):
     pdf_bytes.seek(0)
 
     return pdf_bytes
+
+def pagos_ordenados_por_mes(pagos):
+    sumas_por_banco_y_mes = defaultdict(lambda: defaultdict(float))
+    
+    for pago in pagos:
+        codigo_banco = pago['CodigoBanco']
+        nombre_banco = pago['NombreBanco']
+        fecha_formateada = pago['FechaFormateada']
+        valor = float(pago['Valor'])
+        
+        fecha = datetime.strptime(fecha_formateada, '%d/%m/%Y')
+        mes_anio = fecha.strftime('%B/%Y')
+        
+        # Traducción del nombre del mes al español
+        nombre_mes_ingles = mes_anio.split('/')[0]
+        nombre_mes_espanol = meses_espanol.get(nombre_mes_ingles, nombre_mes_ingles)
+        
+        mes_anio = nombre_mes_espanol + '/' + fecha.strftime('%Y')
+        
+        sumas_por_banco_y_mes[nombre_banco][mes_anio] += valor
+        
+    resultados = []
+    
+    for nombre_banco, sumas_por_mes in sumas_por_banco_y_mes.items():
+        for mes_anio, suma_valor_mes in sumas_por_mes.items():
+            resultado = {
+                "NombreBanco": nombre_banco,
+                "FechaMesAnio": mes_anio,
+                "suma_valores_mes": suma_valor_mes
+            }
+            resultados.append(resultado)
+    
+    return resultados
+            

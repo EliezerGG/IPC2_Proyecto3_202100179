@@ -34,6 +34,14 @@ def test_database_connection():
             connection.close()
             print("La conexión a la base de datos se ha cerrado.", 200)
 
+@app.route('/limipiar-tablas', methods=['GET'])
+def limpiar_tablas():
+    if request.method == 'GET':
+        limpiar_base_datos()
+        return 'Base de Datos limpia', 200
+    return 'Error al limpiar las tablas', 400
+
+
 
 @app.route('/procesar-xml', methods=['POST'])
 def procesar_xml():
@@ -226,6 +234,19 @@ def descargar_pdf_clientes():
                 download_name='informe_clientes.pdf'  # Especifica el nombre del archivo adjunto
             )
     return 'Error al descargar el PDF', 400
+
+
+@app.route('/obtener-pagos', methods=['GET'])
+def obtener_pagos():
+    if request.method == 'GET':
+        pagos = obtener_todos_pagos()
+        data = jsonify(pagos)
+        
+        data_pagos_mes = utils.pagos_ordenados_por_mes(data.json)
+        data_pagos_mes_jsonify = jsonify(data_pagos_mes)
+        # crear una funcion donde me sume 
+        return data_pagos_mes_jsonify, 200
+    return 'Error al obtener los pagos', 400
 
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)
