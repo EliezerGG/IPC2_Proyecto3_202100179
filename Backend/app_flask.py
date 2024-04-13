@@ -171,17 +171,41 @@ def descargar_xml_transac():
 def obtener_cliente():
     if request.method == 'GET':
         nit = request.args.get('nit-cliente')
-        print(nit)
         cliente, facturas, pagos = obtener_info_cliente(nit)
-        print(type(cliente)) #dict
-        print(type(facturas)) #lista
-        print(type(pagos)) #lista
         if cliente:
-            print(json.dumps(cliente, indent=4))
-            print(facturas)
-            print(pagos)
-            return "se obtuvo el cliente", 200
+            # print(json.dumps(cliente, indent=4))
+            # print(facturas)
+            # print(pagos)
+            data = jsonify(cliente= cliente, facturas=facturas, pagos=pagos)
+            print("Datos del cliente:")
+            print(data)
+            # pdf = utils.generar_pdf(data)
+            # send_file(pdf, as_attachment=True)
+            return data, 200
     return 'Error al obtener el cliente', 400
+
+@app.route('/descargar-pdf', methods=['GET'])
+def descargar_pdf():
+    if request.method == 'GET':
+        nit = request.args.get('nit-cliente')
+        cliente, facturas, pagos = obtener_info_cliente(nit) #dict, list, list
+        
+        if cliente:
+            data_response = jsonify(cliente= cliente, facturas=facturas, pagos=pagos) #convertir a un diccionario
+            print("HOla")
+            print(data_response)
+            data_dict = data_response.json #Quiero convertir a diccionario
+            print(data_dict)
+            print('Adios')
+            pdf_bytes = utils.generar_pdf(data_dict)
+        
+        return send_file(
+                pdf_bytes,
+                mimetype='application/pdf',  # Especifica el tipo de archivo
+                as_attachment=True,  # Indica que se debe descargar como archivo adjunto
+                download_name='informe_cliente.pdf'  # Especifica el nombre del archivo adjunto
+            )
+    return 'Error al descargar el PDF', 400
 
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)

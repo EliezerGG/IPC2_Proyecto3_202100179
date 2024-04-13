@@ -12,7 +12,7 @@
 <body>
     <div class="container-peticiones">
         <h2>Consultar Estado de Cuenta</h2>
-        <form action="http://127.0.0.1:5000/obtener-cliente" method="GET">
+        <form action="{% url 'consultar-estado-cuenta' %}" method="GET">
             <label for="nit">Nit:</label><input type="text" id="nit" placeholder="Ingrese NIT" name="nit-cliente">
             <button id="ver-cliente" type="submit">Ver Consulta Cliente</button>
         </form>
