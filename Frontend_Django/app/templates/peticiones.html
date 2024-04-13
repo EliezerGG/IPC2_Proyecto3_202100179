@@ -20,8 +20,10 @@
         <div class="container-clientes inactive" id="clientes">
             <h2>Aqui esta la lista</h2>
         </div>
-        <label for="mes">Mes:</label><input type="text" id="mes" placeholder="Ingrese Mes (Ej: enero/2024)">
-        <button id="consultar-ingreso">Consultar Ingreso</button>
+        <form action="http://127.0.0.1:5000/descargar-ingresos">
+            <label for="mes">Mes:</label><input type="text" id="mes" placeholder="Ingrese Mes (Ej: enero/2024)" name="mes-anio">
+            <button id="consultar-ingreso" type="submit">Consultar Ingreso</button>
+        </form>
     </div>
     <script>
         const toggleButton = document.getElementById('ver-todos');

@@ -248,6 +248,26 @@ def obtener_pagos():
         return data_pagos_mes_jsonify, 200
     return 'Error al obtener los pagos', 400
 
+@app.route('/descargar-ingresos', methods=['GET'])
+def descargar_ingresos():
+    if request.method == 'GET':
+        mes_anio = request.args.get('mes-anio')
+        pagos = obtener_todos_pagos()
+        data = jsonify(pagos)
+        data_pagos_mes = utils.pagos_ordenados_por_mes(data.json)
+        
+        pdf_bytes_ingreso = utils.grafica_ingresos_por_mes(data_pagos_mes, mes_anio)
+       
+        return send_file(
+            pdf_bytes_ingreso,
+            mimetype='application/pdf',  # Especifica el tipo de archivo
+            as_attachment=True,
+            download_name='ingresos_mes.pdf'
+        )
+    return 'Error al generar el PDF', 400
+
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)
     test_database_connection()
+    
+    

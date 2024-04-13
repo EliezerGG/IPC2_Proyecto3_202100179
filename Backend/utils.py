@@ -4,9 +4,12 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 from clases import meses_espanol
+from reportlab.lib.utils import ImageReader
+import matplotlib.backends.backend_pdf as pdf
 
 def respuesta_xml_config(clientes_insertados, clientes_actualizados, bancos_insertados, bancos_actualizados):
     respuesta = ET.Element("respuesta")
@@ -271,3 +274,81 @@ def obtener_mes_anterior(mes):
 
 # grafica_ingresos_por_mes(data, 'Junio/2024')
 
+# def grafica_ingresos_por_mes(data, mes_anio):
+#     sumas_por_mes_y_banco = defaultdict(lambda: defaultdict(float))
+#     mes, anio = mes_anio.split('/')
+    
+#     # Obtener los meses de interés
+#     meses_interes = [obtener_mes_anterior(mes), mes]
+#     if obtener_mes_anterior(mes) != 'Enero':
+#         meses_interes.append(obtener_mes_anterior(obtener_mes_anterior(mes)))
+    
+#     # Crear objeto PDF
+#     nombre_archivo = 'graficas_ingresos.pdf'
+#     pdf_pages = pdf.PdfPages(nombre_archivo)
+
+#     for entry in data:
+#         nombre_banco = entry['NombreBanco']
+#         for mes_interes in meses_interes:
+#             if mes_interes in entry['FechaMesAnio']:
+#                 sumas_por_mes_y_banco[nombre_banco][mes_interes] += entry['suma_valores_mes']
+
+#     # Generar gráfica para cada banco
+#     for nombre_banco, sumas_por_mes in sumas_por_mes_y_banco.items():
+#         meses_ordenados = [obtener_mes_anterior(mes), mes, obtener_mes_anterior(obtener_mes_anterior(mes))]
+#         ingresos = [sumas_por_mes[mes] for mes in meses_ordenados]
+
+#         plt.figure(figsize=(8, 5))
+#         plt.bar(meses_ordenados, ingresos, color='skyblue')
+#         plt.xlabel('Mes')
+#         plt.ylabel('Ingresos')
+#         plt.title(f'Ingresos de {nombre_banco} por Mes')
+#         pdf_pages.savefig()  # Guardar la gráfica en el PDF
+#         plt.close()  # Cerrar la figura después de guardarla
+
+#     # Cerrar el objeto PDF al finalizar
+#     pdf_pages.close()
+
+# grafica_ingresos_por_mes(data, 'Junio/2024')
+
+def grafica_ingresos_por_mes(data, mes_anio):
+    sumas_por_mes_y_banco = defaultdict(lambda: defaultdict(float))
+    mes, anio = mes_anio.split('/')
+    
+    # Obtener los meses de interés
+    meses_interes = [obtener_mes_anterior(mes), mes]
+    if obtener_mes_anterior(mes) != 'Enero':
+        meses_interes.append(obtener_mes_anterior(obtener_mes_anterior(mes)))
+    
+    # Crear objeto BytesIO para guardar el PDF en memoria
+    pdf_bytes = BytesIO()
+
+    # Crear objeto PDF
+    pdf_pages = pdf.PdfPages(pdf_bytes)
+
+    for entry in data:
+        nombre_banco = entry['NombreBanco']
+        for mes_interes in meses_interes:
+            if mes_interes in entry['FechaMesAnio']:
+                sumas_por_mes_y_banco[nombre_banco][mes_interes] += entry['suma_valores_mes']
+
+    # Generar gráfica para cada banco
+    for nombre_banco, sumas_por_mes in sumas_por_mes_y_banco.items():
+        meses_ordenados = [obtener_mes_anterior(mes), mes, obtener_mes_anterior(obtener_mes_anterior(mes))]
+        ingresos = [sumas_por_mes[mes] for mes in meses_ordenados]
+
+        plt.figure(figsize=(8, 5))
+        plt.bar(meses_ordenados, ingresos, color='skyblue')
+        plt.xlabel('Mes')
+        plt.ylabel('Ingresos')
+        plt.title(f'Ingresos de {nombre_banco} por Mes')
+        pdf_pages.savefig()  # Guardar la gráfica en el PDF
+        plt.close()  # Cerrar la figura después de guardarla
+
+    # Cerrar el objeto PDF al finalizar
+    pdf_pages.close()
+
+    # Reiniciar el cursor del objeto BytesIO a la posición inicial
+    pdf_bytes.seek(0)
+
+    return pdf_bytes
