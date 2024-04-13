@@ -211,6 +211,22 @@ def obtener_clientes():
         return data, 200
     return 'Error al obtener los clientes', 400
 
+@app.route('/descargar-pdf-clientes', methods=['GET'])
+def descargar_pdf_clientes():
+    if request.method == 'GET':
+        clientes = obtener_info_todos_clientes()
+        data = jsonify(clientes)
+        data_dict_clientes = data.json
+        pdf_bytes = utils.generar_pdf_clientes(data_dict_clientes)
+        print(data_dict_clientes)
+        return send_file(
+                pdf_bytes,
+                mimetype='application/pdf',  # Especifica el tipo de archivo
+                as_attachment=True,  # Indica que se debe descargar como archivo adjunto
+                download_name='informe_clientes.pdf'  # Especifica el nombre del archivo adjunto
+            )
+    return 'Error al descargar el PDF', 400
+
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)
     test_database_connection()
