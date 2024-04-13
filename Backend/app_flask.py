@@ -173,14 +173,9 @@ def obtener_cliente():
         nit = request.args.get('nit-cliente')
         cliente, facturas, pagos = obtener_info_cliente(nit)
         if cliente:
-            # print(json.dumps(cliente, indent=4))
-            # print(facturas)
-            # print(pagos)
             data = jsonify(cliente= cliente, facturas=facturas, pagos=pagos)
             print("Datos del cliente:")
             print(data)
-            # pdf = utils.generar_pdf(data)
-            # send_file(pdf, as_attachment=True)
             return data, 200
     return 'Error al obtener el cliente', 400
 
@@ -206,6 +201,15 @@ def descargar_pdf():
                 download_name='informe_cliente.pdf'  # Especifica el nombre del archivo adjunto
             )
     return 'Error al descargar el PDF', 400
+
+@app.route('/obtener-clientes', methods=['GET'])
+def obtener_clientes():
+    if request.method == 'GET':
+        clientes = obtener_info_todos_clientes()
+        data = jsonify(clientes)
+        print(data.json)
+        return data, 200
+    return 'Error al obtener los clientes', 400
 
 if __name__ == '__main__':
     app.run(debug=True, port = 5000)

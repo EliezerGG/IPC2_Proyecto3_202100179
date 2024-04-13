@@ -16,8 +16,6 @@ def peticiones(request):
 def ayuda(request):
     return render(request, 'ayuda.html')
 
-# --- pruebas
-
 
 def consultar_estado_cuenta(request):
     if request.method == 'GET':
@@ -36,5 +34,26 @@ def consultar_estado_cuenta(request):
             return render(request, 'estado_cuenta.html', {'cliente_data': data, "saldo_actual": saldo_actual})
         else:
             return HttpResponse('Error al obtener el cliente del servidor Flask', status=response.status_code)
+    else:
+        return HttpResponse('Método no permitido', status=405)
+
+
+def consultar_estado_cuenta_clientes(request):
+    if request.method == 'GET':
+        response = requests.get('http://127.0.0.1:5000/obtener-clientes')
+
+        if response.status_code == 200:
+            data = response.json()
+            print(f"Esta es la data de todos los clientes {data}")
+
+            for cliente in data:
+                total_facturas = sum(float(factura["Valor"]) for factura in cliente["facturas"])
+                total_pagos = sum(float(pago["Valor"]) for pago in cliente["pagos"])
+                saldo_actual = total_pagos - total_facturas
+
+                cliente["saldo_actual"] = saldo_actual
+            return render(request, 'estado_cuenta_clientes.html', {'clientes_data': data})
+        else:
+            return HttpResponse('Error al obtener los clientes del servidor Flask', status=response.status_code)
     else:
         return HttpResponse('Método no permitido', status=405)

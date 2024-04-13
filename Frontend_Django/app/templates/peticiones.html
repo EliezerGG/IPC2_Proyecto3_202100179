@@ -16,7 +16,7 @@
             <label for="nit">Nit:</label><input type="text" id="nit" placeholder="Ingrese NIT" name="nit-cliente">
             <button id="ver-cliente" type="submit">Ver Consulta Cliente</button>
         </form>
-            <button id="ver-todos">Ver Todos los Clientes</button>
+        <a href="{% url 'consultar-estado-cuenta-clientes' %}">Ver Todos los Clientes</a>
         <div class="container-clientes inactive" id="clientes">
             <h2>Aqui esta la lista</h2>
         </div>
@@ -33,3 +33,4 @@
     </script>
 </body>
 </html>
+

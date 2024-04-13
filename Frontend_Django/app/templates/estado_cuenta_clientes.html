@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <title>Estado de Cuenta</title>
+    <title>Estado de Cuenta Clientes</title>
 </head>
 <body>
-
+{% for cliente in clientes_data %}
 <div class="container-estado-cliente">
     <h2>Estado de Cuenta del Cliente</h2>
     <div>
-        <p>Cliente: {{ cliente_data.cliente.NIT }} - {{ cliente_data.cliente.Nombre }}</p>
-        <p>Saldo actual: Q. {{ saldo_actual }}</p>
+        <p>Cliente: {{ cliente.cliente.NIT }} - {{ cliente.cliente.Nombre }}</p>
+        <p>Saldo actual: Q. {{ cliente.saldo_actual }}</p>
     </div>
 
     <h3>Facturas:</h3>
@@ -26,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for factura in cliente_data.facturas %}
+            {% for factura in cliente.facturas %}
             <tr>
                 <td>{{ factura.Fecha }}</td>
                 <td>{{ factura.Valor }} {{ factura.NumeroFactura }}</td>
@@ -46,7 +46,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for pago in cliente_data.pagos %}
+            {% for pago in cliente.pagos %}
             <tr>
                 <td>{{ pago.Fecha }}</td>
                 <td>Q.0</td>
@@ -55,11 +55,7 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <form action="http://127.0.0.1:5000/descargar-pdf" method="GET">
-        <input type="hidden" name="nit-cliente" value="{{ cliente_data.cliente.NIT }}">
-    <button type="submit" class="button-descargar">Descargar PDF</button>
-    </form>
 </div>
+{% endfor %}
 </body>
 </html>

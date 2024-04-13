@@ -163,7 +163,9 @@ def obtener_info_cliente(nit_cliente):
         print("Error al obtener información del cliente:", e)
     
 
-def obtener_info_todos_clientes(connection):
+def obtener_info_todos_clientes():
+    connection = connect_to_database()
+    cursor = connection.cursor()
     try:
         cursor = connection.cursor(dictionary=True)
         
