@@ -51,7 +51,7 @@ form{
   width: 382px;
 }
 
-.container-info button{
+.container-info button, .container-info .btn-home{
   background-color: #280274;
   width: 400px;
 }
@@ -60,7 +60,7 @@ form{
   text-align: center;
 }
 
-button, .container-peticiones a {
+button, .container-peticiones a, .container-info .btn-home {
   border: none;
   color: white;
   padding: 15px 0px;
@@ -71,7 +71,9 @@ button, .container-peticiones a {
   cursor: pointer;
   border-radius: 5px;
 }
-
+.container-peticiones .btn-home,.container-info .btn-home{
+  background-color: #0D9276;
+}
 .button-descargar{
   padding: 15px 15px;
   background-color: #4205b8;
