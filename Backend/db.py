@@ -147,6 +147,20 @@ def insertar_pago(codigo_banco, nit_cliente, fecha, valor):
         connection = connect_to_database()
         cursor = connection.cursor()
         
+        # Consulta SQL para verificar si ya existe un pago con los mismos datos
+        duplicate_query = """
+            SELECT COUNT(*) FROM Pago 
+            WHERE CodigoBanco = %s AND NITCliente = %s AND Fecha = %s
+        """
+        cursor.execute(duplicate_query, (codigo_banco, nit_cliente, fecha))
+        count = cursor.fetchone()[0]
+        
+        # Si ya existe un pago con los mismos datos, se marca como repetido y no se inserta
+        if count > 0:
+            print(f"El pago para el cliente con NIT {nit_cliente} en el banco con código {codigo_banco} y fecha {fecha} ya existe.")
+            control.pagos_duplicados+= 1
+            return
+        
         # Consulta SQL para insertar el nuevo pago
         insert_query = """
             INSERT INTO Pago (CodigoBanco, NITCliente, Fecha, Valor)

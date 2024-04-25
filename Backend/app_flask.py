@@ -150,6 +150,7 @@ def procesar_xml_transac():
             print(f"Facturas con Error: {control.facturas_error}")
             print(f"Pagos Insertados: {control.pagos_insertados}")
             print(f"Pagos con Error: {control.pagos_error}")
+            print(f"Pagos Duplicados: {control.pagos_duplicados}")
             
             return redirect(url_for('descargar_xml_transac'))
     return 'Error al procesar el archivo XML', 400
