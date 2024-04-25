@@ -1,5 +1,6 @@
 import mysql.connector
 from clases import Control
+import xml.etree.ElementTree as ET
 control = Control()
 
 
@@ -24,13 +25,13 @@ def limpiar_base_datos():
         # Crear el cursor
         cursor = connection.cursor()
         
-        cursor.execute("DELETE FROM Cliente")
-        cursor.execute("DELETE FROM Banco")
-        # Eliminar todos los datos de la tabla Factura
-        cursor.execute("DELETE FROM Factura")
-        
         # Eliminar todos los datos de la tabla Pago
         cursor.execute("DELETE FROM Pago")
+        # Eliminar todos los datos de la tabla Factura
+        cursor.execute("DELETE FROM Factura")
+        cursor.execute("DELETE FROM Cliente")
+        cursor.execute("DELETE FROM Banco")
+        
         
         # Reiniciar el contador de autoincremento de la tabla Factura (si es necesario)
         cursor.execute("ALTER TABLE Factura AUTO_INCREMENT = 1")
@@ -230,6 +231,52 @@ def obtener_info_todos_clientes():
         print("Error al conectar a la base de datos:", e)
         return None
 
+# Retornar en XML
+def obtener_info_todos_clientes_xml():
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    try:
+        cursor = connection.cursor(dictionary=True)
+        
+        # Consultar todos los clientes
+        cursor.execute("SELECT * FROM Cliente")
+        clientes = cursor.fetchall()
+        
+        root = ET.Element("clientes")
+        for cliente in clientes:
+            nit_cliente = cliente['NIT']
+            
+            # Consultar facturas del cliente
+            cursor.execute("SELECT * FROM Factura WHERE NITCliente = %s", (nit_cliente,))
+            facturas = cursor.fetchall()
+            
+            # Consultar pagos del cliente
+            cursor.execute("SELECT * FROM Pago WHERE NITCliente = %s", (nit_cliente,))
+            pagos = cursor.fetchall()
+            
+            cliente_element = ET.SubElement(root, "cliente")
+            for key, value in cliente.items():
+                ET.SubElement(cliente_element, key).text = str(value)
+            
+            facturas_element = ET.SubElement(cliente_element, "facturas")
+            for factura in facturas:
+                factura_element = ET.SubElement(facturas_element, "factura")
+                for key, value in factura.items():
+                    ET.SubElement(factura_element, key).text = str(value)
+            
+            pagos_element = ET.SubElement(cliente_element, "pagos")
+            for pago in pagos:
+                pago_element = ET.SubElement(pagos_element, "pago")
+                for key, value in pago.items():
+                    ET.SubElement(pago_element, key).text = str(value)
+        
+        xml_data = ET.tostring(root).decode()
+        return xml_data
+    except mysql.connector.Error as e:
+        print("Error al conectar a la base de datos:", e)
+        return None
+# ------
+
 def obtener_todos_pagos():
     connection = connect_to_database()
     cursor = connection.cursor(dictionary=True)
@@ -246,6 +293,34 @@ def obtener_todos_pagos():
         pagos = cursor.fetchall()
         
         return pagos
+    except mysql.connector.Error as e:
+        print("Error al conectar a la base de datos:", e)
+        return None
+
+# Retornar en XML
+def obtener_todos_pagos_xml():
+    connection = connect_to_database()
+    cursor = connection.cursor(dictionary=True)
+    
+    try:
+        # Consultar todos los pagos con el nombre del banco
+        query = """
+            SELECT Pago.CodigoBanco, Banco.Nombre AS NombreBanco, DATE_FORMAT(Pago.Fecha, '%d/%m/%Y') AS FechaFormateada, Pago.Valor
+            FROM Pago
+            INNER JOIN Banco ON Pago.CodigoBanco = Banco.Codigo
+
+        """
+        cursor.execute(query)
+        pagos = cursor.fetchall()
+        
+        root = ET.Element("pagos")
+        for pago in pagos:
+            pago_element = ET.SubElement(root, "pago")
+            for key, value in pago.items():
+                ET.SubElement(pago_element, key).text = str(value)
+        
+        xml_data = ET.tostring(root).decode()
+        return xml_data
     except mysql.connector.Error as e:
         print("Error al conectar a la base de datos:", e)
         return None

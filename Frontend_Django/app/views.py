@@ -57,3 +57,4 @@ def consultar_estado_cuenta_clientes(request):
             return HttpResponse('Error al obtener los clientes del servidor Flask', status=response.status_code)
     else:
         return HttpResponse('Método no permitido', status=405)
+

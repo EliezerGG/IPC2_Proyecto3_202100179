@@ -1,5 +1,5 @@
 import io
-from flask import Flask, jsonify, request, render_template,url_for, send_file,make_response,flash,redirect
+from flask import Flask, jsonify, request, render_template,url_for, send_file,make_response,flash,redirect,Response
 from flask_cors import CORS
 import xml.etree.ElementTree as ET
 from db import connect_to_database
@@ -179,6 +179,7 @@ def descargar_xml_transac():
 def obtener_cliente():
     if request.method == 'GET':
         nit = request.args.get('nit-cliente')
+        print(nit)
         cliente, facturas, pagos = obtener_info_cliente(nit)
         if cliente:
             data = jsonify(cliente= cliente, facturas=facturas, pagos=pagos)
@@ -219,6 +220,19 @@ def obtener_clientes():
         return data, 200
     return 'Error al obtener los clientes', 400
 
+# Retornar Clientes xml 
+@app.route('/obtener-clientes-xml', methods=['GET'])
+def obtener_clientes_xml():
+    if request.method == 'GET':
+        clientes_xml = obtener_info_todos_clientes_xml()
+        if clientes_xml:
+            return Response(clientes_xml, mimetype='text/xml'), 200
+        else:
+            return 'Error al obtener los clientes', 500
+    return 'Error al obtener los clientes', 400
+
+# -----
+
 @app.route('/descargar-pdf-clientes', methods=['GET'])
 def descargar_pdf_clientes():
     if request.method == 'GET':
@@ -246,6 +260,17 @@ def obtener_pagos():
         data_pagos_mes_jsonify = jsonify(data_pagos_mes)
         # crear una funcion donde me sume 
         return data_pagos_mes_jsonify, 200
+    return 'Error al obtener los pagos', 400
+
+# Retornar Pagos xml
+@app.route('/obtener-pagos-xml', methods=['GET'])
+def obtener_pagos_xml():
+    if request.method == 'GET':
+        pagos_xml = obtener_todos_pagos_xml()
+        if pagos_xml:
+            return Response(pagos_xml, mimetype='text/xml'), 200
+        else:
+            return 'Error al obtener los pagos', 500
     return 'Error al obtener los pagos', 400
 
 @app.route('/descargar-ingresos', methods=['GET'])
