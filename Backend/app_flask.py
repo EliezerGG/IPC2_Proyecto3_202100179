@@ -7,6 +7,7 @@ from db import *
 from clases import *
 import utils
 from datetime import datetime
+import re
 import json
 
 
@@ -105,7 +106,11 @@ def procesar_xml_transac():
             for factura in root.find("facturas").findall("factura"):
                 numero_factura = factura.find("numeroFactura").text.strip()
                 nit_cliente = factura.find("NITcliente").text.strip()
-                fecha = factura.find("fecha").text.strip()
+                fecha_pattern = re.compile(r'\b(\d{2}/\d{2}/\d{4})\b')
+                fecha = fecha_pattern.findall(factura.find("fecha").text.strip())
+                print('Hola')
+                fecha = "".join(fecha)
+                print(fecha)
                 fecha = datetime.strptime(fecha, "%d/%m/%Y")
                 fecha = fecha.strftime("%Y-%m-%d")
                 valor_text = factura.find("valor").text.strip()
@@ -126,7 +131,10 @@ def procesar_xml_transac():
 
             for pago in root.find("pagos").findall("pago"):
                 codigo_banco = pago.find("codigoBanco").text
-                fecha = pago.find("fecha").text.strip()
+                fecha_pattern = re.compile(r'\b(\d{2}/\d{2}/\d{4})\b')
+                fecha = fecha_pattern.findall(pago.find("fecha").text.strip())
+                fecha = "".join(fecha)
+                print(fecha)
                 fecha = datetime.strptime(fecha, "%d/%m/%Y")
                 nit_cliente = pago.find("NITcliente").text.strip()
                 valor_text = pago.find("valor").text.strip()  # Corregir aquí
